@@ -23,11 +23,11 @@ IndicatorCode = {
     "SL.IND.EMPL.ZS": "Employment in Industry(%)",
     "SL.AGR.EMPL.ZS": "Employment in Agriculture(%)",
     "FB.ATM.TOTL.P5": "Automated teller machines (ATMs) (per 100,000 adults)",
-    }
+}
 
 job_df_melted = GetData('job.csv').melt(id_vars=['Country Name', 'Country Code', 'Series Name', 'Series Code'], var_name='Year', value_name='Value')
 
-# Assuming melted_df is your DataFrame
+# Assuming melted_df is your df
 # Replace non-numeric values with NaN
 job_df_melted.replace('..', np.nan, inplace=True)
 job_df_pivoted = job_df_melted.groupby(['Country Name', 'Country Code', 'Year', 'Series Name'])['Value'].mean().unstack().reset_index()
@@ -168,7 +168,7 @@ def Germany_HeatMap(Job_Data):
        'Labor force, total'
 ]
 
-# Create a subset of data with selected indicators
+# Create a subset of data with selected 
     Germany_subset = Germany_data[indicators]
 
 # Plotting the heatmap
