@@ -14,17 +14,6 @@ def GetData(job):
     job_df = pd.read_csv(job)
     return job_df
 
-IndicatorCode = {
-    "SP.POP.TOTL": "Population, total",
-    "NY.GDP.MKTP.KD.ZG": "GDP growth (annual %)",
-    "GC.TAX.TOTL.GD.ZS": "Tax revenue (% of GDP)",
-    "SL.TLF.TOTL.IN": "Labor force, total",
-    "SL.EMP.TOTL": "Total employment, total (ages 15+)",
-    "SL.IND.EMPL.ZS": "Employment in Industry(%)",
-    "SL.AGR.EMPL.ZS": "Employment in Agriculture(%)",
-    "FB.ATM.TOTL.P5": "Automated teller machines (ATMs) (per 100,000 adults)",
-}
-
 job_df_melted = GetData('job.csv').melt(id_vars=['Country Name', 'Country Code', 'Series Name', 'Series Code'], var_name='Year', value_name='Value')
 
 # Assuming melted_df is your df
@@ -204,6 +193,35 @@ def Egypt_HeatMap(Job_Data):
     plt.title('Correlation Heatmap of Indicators for Egypt')
     plt.show()
 Egypt_HeatMap('job_df_cleaned.csv')
+
+def United_Kingdom_HeatMap(Job_Data):
+    Heat_data = pd.read_csv(Job_Data)
+    UK_data = Heat_data[Heat_data['Country Name'] == 'United Kingdom']
+
+# Select relevant indicators
+    indicators = [
+       'Population, total',
+       'Tax revenue (% of GDP)',
+       'Total employment, total (ages 15+)',
+       'Automated teller machines (ATMs) (per 100,000 adults)',
+       'Employers, total (% of total employment) (modeled ILO estimate)',
+       'Employment in agriculture (% of total employment) (modeled ILO estimate)',
+       'Employment in industry (% of total employment) (modeled ILO estimate)',
+       'GDP growth (annual %)',
+       'Labor force, total'
+]
+
+# Create a subset of data with selected indicators
+    UK_subset = UK_data[indicators]
+
+# Plotting the heatmap
+    plt.figure(figsize=(12, 8))
+    heatmap = sns.heatmap(UK_subset.corr(), annot=True, cmap='twilight', fmt='.2f', annot_kws={"size": 10})
+    heatmap.set_xticklabels([label[:20] + '...' if len(label) > 20 else label for label in UK_subset.columns])
+    heatmap.set_yticklabels([label[:20] + '...' if len(label) > 20 else label for label in UK_subset.columns])
+    plt.title('Correlation Heatmap of Indicators for United Kingdom')
+    plt.show()
+United_Kingdom_HeatMap('job_df_cleaned.csv')
 
 
 
