@@ -14,137 +14,179 @@ def GetData(job):
     job_df = pd.read_csv(job)
     return job_df
 
+# Load data and melt it for easier manipulation
 job_df_melted = GetData('job.csv').melt(id_vars=['Country Name', 'Country Code', 'Series Name', 'Series Code'], var_name='Year', value_name='Value')
 
-# Assuming melted_df is your df
-# Replace non-numeric values with NaN
+# Replace non-numeric values with NaN for easier processing
 job_df_melted.replace('..', np.nan, inplace=True)
+
+# Group melted data to create a pivoted DataFrame
 job_df_pivoted = job_df_melted.groupby(['Country Name', 'Country Code', 'Year', 'Series Name'])['Value'].mean().unstack().reset_index()
 
 # Creating a pivot table from pivoted_df
 job_df_countries = job_df_melted.pivot_table(index=['Year', 'Series Name'], columns='Country Name', values='Value')
 job_df_years = job_df_melted.pivot_table(index=['Country Name', 'Series Name'], columns='Year', values='Value')
 
+# Fill missing values with the mean of each column
 job_df_cleaned = job_df_pivoted.fillna(job_df_pivoted.mean())
 
 # Applying Statistical Methods on cleaned dataset
 job_df_cleaned_new = job_df_cleaned.drop(['Year', 'Country Name'], axis='columns')
 print(job_df_cleaned_new.describe())
 
+# Bar graph for employement rate in chosen countries
 def Employement_Bar_Graph(Job_Data):
+    
     # Read the data from the CSV file
     emp_data = pd.read_csv(Job_Data)
 
-    # Filter data for the specified countries and years
+    # Filter countries to plot
     countries = ['Pakistan', 'Germany',
                  'United Kingdom', 'Egypt, Arab Rep.', 'Spain']
     
+    # Filter years to plot
     years = range(2000, 2009)
     
+    # Filter data for the specified countries and years
     filtered_emp_data = emp_data[(emp_data['Country Name'].isin(
         countries)) & (emp_data['Year'].isin(years))]
 
-    # Pivot the data for grouped bar chart
+    # Pivot the data for bar chart
     pivoted_emp_data = filtered_emp_data.pivot_table(
         index='Country Name', columns='Year', values='Total employment, total (ages 15+)')
 
-    # Plotting the grouped bar chart
+    # Plot the bar chart
     pivoted_emp_data.plot(kind='bar', figsize=(10, 6))
     plt.title('Employment Rate of countries')
+    
+    # To plot legend and label for title, x axis and y axis
     plt.legend(title='Years')
+    plt.title('Employement Rate of Countries')
     plt.xlabel('Countries')
-    plt.ylabel('Employment Rate')
-    plt.legend(title='Years')
+    plt.ylabel('Employment Rate')    
     plt.grid(True)
-    plt.savefig('employement_bar_graph', dpi=300)
+    
+    # Save the plot as an image and display it
+    plt.savefig('Employement_Bar_Graph', dpi=300)
     plt.show()  
 Employement_Bar_Graph('job_df_cleaned.csv')
 
+# Bar graph for employement rate in chosen countries
 def Population_Bar_Graph(Job_Data):
+    
     # Read the data from the CSV file
     pop_data = pd.read_csv(Job_Data)
 
-    # Filter data for the specified countries and years
+    # Filter countries to plot
     countries = ['Pakistan', 'Germany',
                  'United Kingdom', 'Egypt, Arab Rep.', 'Spain']
+    
+    # Filter Years to plot
     years = range(2000, 2009)
+    
+    # Filter data for the specified countries and years
     filtered_pop_data = pop_data[(pop_data['Country Name'].isin(
         countries)) & (pop_data['Year'].isin(years))]
 
-    # Pivot the data for grouped bar chart
+    # Pivot the data for bar chart
     pivoted_pop_data = filtered_pop_data.pivot_table(
         index='Country Name', columns='Year', values='Population, total')
 
-    # Plotting the grouped bar chart
+    # Plot the bar chart
     pivoted_pop_data.plot(kind='bar', figsize=(10, 6))
+    
+    # To plot legend and label for title, x axis and y axis
+    plt.legend(title='Year')
     plt.title('Population of countries')
     plt.xlabel('Country')
     plt.ylabel('Population')
     plt.grid(True)
-    plt.legend(title='Year')
-    plt.savefig('job_df_cleaned', dpi=300)
+    
+    # Save the plot as an image and display it
+    plt.savefig('Population_Bar_Graph', dpi=300)
     plt.show()
 Population_Bar_Graph('job_df_cleaned.csv')
 
+# Line Plot for GDP rate in chosen countries
 def Gdp_Line_Plot(Job_Data):
-    # Load the dataset from the CSV file
+    
+    # Read the data from the CSV file
     gdp_data = pd.read_csv(Job_Data)
 
-    # Filter data for the specified countries and years
+    # Filter Countries to plot
     countries = ['Pakistan', 'Germany', 'United Kingdom', 'Egypt, Arab Rep.', 'Spain']
+    
+    # Filter Years to plot
     years = list(range(2000, 2009))
 
+    # Filter data for the specified countries and years
     filtered_gdp_data = gdp_data[(gdp_data['Country Name'].isin(countries)) & (gdp_data['Year'].isin(years))]
 
-    # Pivot the data for easier plotting
+    # Pivot the data for line chart
     pivoted_gdp_data = filtered_gdp_data.pivot(index='Year', columns='Country Name', values='GDP growth (annual %)')
 
-    # Plotting
+    # Plot the line chart
     plt.figure(figsize=(10, 6))
-
     for country in countries:
         plt.plot(pivoted_gdp_data.index, pivoted_gdp_data[country], label=country)
 
+    # To plot legend and label for title, x axis and y axis
+    plt.legend()
     plt.title('GDP of Countries')
     plt.xlabel('Year')
     plt.ylabel('GDP')
-    plt.legend()
     plt.grid(True)
+    
+    # To save and show the plot
+    plt.savefig('Gdp_Line_Plot', dpi=300)
     plt.show()
 Gdp_Line_Plot('job_df_cleaned.csv')
 
+# Line Plot for tax revenue in chosen countries
 def Tax_Line_Plot(Job_Data):
-    # Load the dataset from the CSV file
+    
+    # Read the data from the CSV file
     tax_data = pd.read_csv(Job_Data)
 
-    # Filter data for the specified countries and years
+    # Filter Countries to plot
     countries = ['Pakistan', 'Germany', 'United Kingdom', 'Egypt, Arab Rep.', 'Spain']
+    
+    # Filter Years to plot
     years = list(range(2000, 2009))
-
+        
+    # Filter data for the specified countries and years
     filtered_tax_data = tax_data[(tax_data['Country Name'].isin(countries)) & (tax_data['Year'].isin(years))]
 
-    # Pivot the data for easier plotting
+    # Pivot the data for line chart
     pivoted_tax_data = filtered_tax_data.pivot(index='Year', columns='Country Name', values='Tax revenue (% of GDP)')
 
-    # Plotting
+    # Plot the line chart
     plt.figure(figsize=(10, 6))
- 
     for country in countries:
         plt.plot(pivoted_tax_data.index, pivoted_tax_data[country], label=country)
 
+    # To plot legend and label for title, x axis and y axis
     plt.title('Tax Revenue')
     plt.xlabel('Year')
     plt.ylabel('Population')
     plt.legend()
     plt.grid(True)
+    
+    # Show the plot
+    plt.savefig('Tax_Line_Plot', dpi=300)
     plt.show()
 Tax_Line_Plot('job_df_cleaned.csv')
 
+# Heat Map for Germany
 def Germany_HeatMap(Job_Data):
+    
+    # Read the data from the CSV file
     Heat_data = pd.read_csv(Job_Data)
+    
+    # Select the country
     Germany_data = Heat_data[Heat_data['Country Name'] == 'Germany']
 
-# Select relevant indicators
+    # Filter Indicators to plot
     indicators = [
        'Population, total',
        'Tax revenue (% of GDP)',
@@ -155,25 +197,37 @@ def Germany_HeatMap(Job_Data):
        'Employment in industry (% of total employment) (modeled ILO estimate)',
        'GDP growth (annual %)',
        'Labor force, total'
-]
+         ]
 
-# Create a subset of data with selected 
+    # Create a subset of country
     Germany_subset = Germany_data[indicators]
 
-# Plotting the heatmap
+    # Plot the heatmap
     plt.figure(figsize=(12, 8))
     heatmap = sns.heatmap(Germany_subset.corr(), annot=True, cmap='magma', fmt='.2f', annot_kws={"size": 10})
+    
+    # To truncate names of indicators in x axis
     heatmap.set_xticklabels([label[:20] + '...' if len(label) > 20 else label for label in Germany_subset.columns])
+    
+    # To truncate names of indicators in y axis
     heatmap.set_yticklabels([label[:20] + '...' if len(label) > 20 else label for label in Germany_subset.columns])
+    
+    # Give a title and show the plot
     plt.title('Correlation Heatmap of Indicators for Germany')
+    plt.savefig('Germany_HeatMap', dpi=300)
     plt.show()
 Germany_HeatMap('job_df_cleaned.csv')
 
+# Heat Map for Egypt
 def Egypt_HeatMap(Job_Data):
+    
+    # Read the data from the CSV file
     Heat_data = pd.read_csv(Job_Data)
+    
+    # Select the country
     Egypt_data = Heat_data[Heat_data['Country Name'] == 'Egypt, Arab Rep.']
 
-# Select relevant indicators
+    # Filter Indicators to plot
     indicators = [
        'Population, total',
        'Tax revenue (% of GDP)',
@@ -186,23 +240,35 @@ def Egypt_HeatMap(Job_Data):
        'Labor force, total'
 ]
 
-# Create a subset of data with selected indicators
+    # Create a subset of country
     Egypt_subset = Egypt_data[indicators]
 
-# Plotting the heatmap
+    # Plot the heatmap
     plt.figure(figsize=(12, 8))
     heatmap = sns.heatmap(Egypt_subset.corr(), annot=True, cmap='ocean', fmt='.2f', annot_kws={"size": 10})
+    
+    # To truncate names of indicators in x axis
     heatmap.set_xticklabels([label[:20] + '...' if len(label) > 20 else label for label in Egypt_subset.columns])
+    
+    # To truncate names of indicators in y axis
     heatmap.set_yticklabels([label[:20] + '...' if len(label) > 20 else label for label in Egypt_subset.columns])
+    
+    # Give a title and show the plot
     plt.title('Correlation Heatmap of Indicators for Egypt')
+    plt.savefig('Egypt_HeatMap', dpi=300)
     plt.show()
 Egypt_HeatMap('job_df_cleaned.csv')
 
-def United_Kingdom_HeatMap(Job_Data):
+# Heat Map for Egypt
+def Pakistan_HeatMap(Job_Data):
+    
+    # Read the data from the CSV file
     Heat_data = pd.read_csv(Job_Data)
-    UK_data = Heat_data[Heat_data['Country Name'] == 'United Kingdom']
+    
+    # Select the country
+    Pakistan_data = Heat_data[Heat_data['Country Name'] == 'Egypt, Arab Rep.']
 
-# Select relevant indicators
+    # Filter Indicators to plot
     indicators = [
        'Population, total',
        'Tax revenue (% of GDP)',
@@ -215,17 +281,26 @@ def United_Kingdom_HeatMap(Job_Data):
        'Labor force, total'
 ]
 
-# Create a subset of data with selected indicators
-    UK_subset = UK_data[indicators]
+    # Create a subset of country
+    Pakistan_subset = Pakistan_data[indicators]
 
-# Plotting the heatmap
+    # Plot the heatmap
     plt.figure(figsize=(12, 8))
-    heatmap = sns.heatmap(UK_subset.corr(), annot=True, cmap='twilight', fmt='.2f', annot_kws={"size": 10})
-    heatmap.set_xticklabels([label[:20] + '...' if len(label) > 20 else label for label in UK_subset.columns])
-    heatmap.set_yticklabels([label[:20] + '...' if len(label) > 20 else label for label in UK_subset.columns])
-    plt.title('Correlation Heatmap of Indicators for United Kingdom')
+    heatmap = sns.heatmap(Pakistan_subset.corr(), annot=True, cmap='twilight', fmt='.2f', annot_kws={"size": 10})
+    
+    # To truncate names of indicators in x axis
+    heatmap.set_xticklabels([label[:20] + '...' if len(label) > 20 else label for label in Pakistan_subset.columns])
+    
+    # To truncate names of indicators in y axis
+    heatmap.set_yticklabels([label[:20] + '...' if len(label) > 20 else label for label in Pakistan_subset.columns])
+    
+    # Give a title and show the plot
+    plt.title('Correlation Heatmap of Indicators for Egypt')
+    plt.savefig('Pakistan_HeatMap', dpi=300)
     plt.show()
-United_Kingdom_HeatMap('job_df_cleaned.csv')
+Pakistan_HeatMap('job_df_cleaned.csv')
+
+
 
 
 
