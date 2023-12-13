@@ -8,9 +8,15 @@ Created on Mon Dec 11 19:31:12 2023
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.stats import skew
+from scipy.stats import kurtosis
 import seaborn as sns
 
-def GetData(job):
+def GetData(job): 
+    """
+    Read the dataset from the csv file    
+    Returns the loaded Dataframe containing the data from the csv file. 
+    """
     job_df = pd.read_csv(job)
     return job_df
 
@@ -32,10 +38,32 @@ job_df_cleaned = job_df_pivoted.fillna(job_df_pivoted.mean())
 
 # Applying Statistical Methods on cleaned dataset
 job_df_cleaned_new = job_df_cleaned.drop(['Year', 'Country Name'], axis='columns')
-print(job_df_cleaned_new.describe())
+
+#describe method()
+df_describe = job_df_cleaned_new.describe()
+print(df_describe)
+
+#skewness
+population_Germany= job_df_cleaned[job_df_cleaned['Country Name'] == "Germany"]
+Germany_Skewness = skew(population_Germany["Population, total"])
+print(f"skewnwss of Germany population data {Germany_Skewness}") 
+
+#kurtosis
+Germany_Kurtosis = kurtosis(population_Germany["Population, total"])
+print(f"kurtosis of Germany population data{Germany_Kurtosis}")
 
 # Bar graph for employement rate in chosen countries
 def Employement_Bar_Graph(Job_Data):
+    
+    """    
+    Visualizes and compares the employment rates of specific countries over a set of years.    
+    Reads the data from the CSV file or DataFrame    
+    Filters the dataset based on specific countries and years from 2000 t0 2008    
+    Creates a pivot table to structure the data for plotting a bar chart.
+    Plots a bar chart to display the employment rates for selected countries across different years.
+    Generates a bar chart visualizing the employment rates of the chosen countries.    
+    Saves the plot as an image file named "Employement_Bar_Graph.png".    
+    """
     
     # Read the data from the CSV file
     emp_data = pd.read_csv(Job_Data)
@@ -74,6 +102,16 @@ Employement_Bar_Graph('job_df_cleaned.csv')
 # Bar graph for employement rate in chosen countries
 def Population_Bar_Graph(Job_Data):
     
+    """    
+    Visualizes and compares the population rates of specific countries over a set of years.    
+    Reads the data from the CSV file or DataFrame    
+    Filters the dataset based on specific countries and years from 2000 t0 2008    
+    Creates a pivot table to structure the data for plotting a bar chart.
+    Plots a bar chart to display the population rates for selected countries across different years.
+    Generates a bar chart visualizing the employment rates of the chosen countries.    
+    Saves the plot as an image file named "Population_Bar_Graph.png".    
+    """
+    
     # Read the data from the CSV file
     pop_data = pd.read_csv(Job_Data)
 
@@ -110,6 +148,16 @@ Population_Bar_Graph('job_df_cleaned.csv')
 # Line Plot for GDP rate in chosen countries
 def Gdp_Line_Plot(Job_Data):
     
+    """    
+    Visualizes and compares the GDP rates of specific countries over a set of years.    
+    Reads the data from the CSV file or DataFrame    
+    Filters the dataset based on specific countries and years from 2000 t0 2008    
+    Creates a pivot table to structure the data for plotting a line plot.
+    Plots a line plot to display the employment rates for selected countries across different years.
+    Generates a line plot visualizing the GDP rates of the chosen countries.    
+    Saves the plot as an image file named "Gdp_Line_Plot.png".    
+    """
+    
     # Read the data from the CSV file
     gdp_data = pd.read_csv(Job_Data)
 
@@ -145,6 +193,17 @@ Gdp_Line_Plot('job_df_cleaned.csv')
 # Line Plot for tax revenue in chosen countries
 def Tax_Line_Plot(Job_Data):
     
+    """    
+    Visualizes and compares the Tax rates of specific countries over a set of years.    
+    Reads the data from the CSV file or DataFrame    
+    Filters the dataset based on specific countries and years from 2000 t0 2008    
+    Creates a pivot table to structure the data for plotting a line plot.
+    Plots a line plot to display the employment rates for selected countries across different years.
+    Generates a line plot visualizing the Tax rates of the chosen countries.    
+    Saves the plot as an image file named "Tax_Line_Plot.png".    
+    """
+    
+    
     # Read the data from the CSV file
     tax_data = pd.read_csv(Job_Data)
 
@@ -179,6 +238,15 @@ Tax_Line_Plot('job_df_cleaned.csv')
 
 # Heat Map for Germany
 def Germany_HeatMap(Job_Data):
+    
+    """
+    Creates a correlation heatmap for various economic indicators specifically for Germany. 
+    Reads the data from the CSV file or DataFrame.
+    Selects the data specifically for Germany 
+    Filters out indicators related to population, tax revenue, employment, ATMs, employers, GDP growth, and labor force.
+    Creates a subset of economic indicators for Germany.
+    Generates a correlation heatmap using seaborn (sns) for the selected indicators.
+    """
     
     # Read the data from the CSV file
     Heat_data = pd.read_csv(Job_Data)
@@ -221,6 +289,15 @@ Germany_HeatMap('job_df_cleaned.csv')
 # Heat Map for Egypt
 def Egypt_HeatMap(Job_Data):
     
+    """
+    Creates a correlation heatmap for various economic indicators specifically for Egypt. 
+    Reads the data from the CSV file or DataFrame.
+    Selects the data specifically for Egypt 
+    Filters out indicators related to population, tax revenue, employment, ATMs, employers, GDP growth, and labor force.
+    Creates a subset of economic indicators for Egypt.
+    Generates a correlation heatmap using seaborn (sns) for the selected indicators.
+    """
+    
     # Read the data from the CSV file
     Heat_data = pd.read_csv(Job_Data)
     
@@ -261,6 +338,15 @@ Egypt_HeatMap('job_df_cleaned.csv')
 
 # Heat Map for Egypt
 def Pakistan_HeatMap(Job_Data):
+    
+    """
+    Creates a correlation heatmap for various economic indicators specifically for Pakistan. 
+    Reads the data from the CSV file or DataFrame.
+    Selects the data specifically for Pakistan 
+    Filters out indicators related to population, tax revenue, employment, ATMs, employers, GDP growth, and labor force.
+    Creates a subset of economic indicators for pakistan.
+    Generates a correlation heatmap using seaborn (sns) for the selected indicators.
+    """
     
     # Read the data from the CSV file
     Heat_data = pd.read_csv(Job_Data)
