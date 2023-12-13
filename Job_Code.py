@@ -295,7 +295,7 @@ def Pakistan_HeatMap(Job_Data):
     heatmap.set_yticklabels([label[:20] + '...' if len(label) > 20 else label for label in Pakistan_subset.columns])
     
     # Give a title and show the plot
-    plt.title('Correlation Heatmap of Indicators for Egypt')
+    plt.title('Correlation Heatmap of Indicators for Pakistan')
     plt.savefig('Pakistan_HeatMap', dpi=300)
     plt.show()
 Pakistan_HeatMap('job_df_cleaned.csv')
