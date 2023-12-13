@@ -163,6 +163,8 @@ def Germany_HeatMap(Job_Data):
 # Plotting the heatmap
     plt.figure(figsize=(12, 8))
     heatmap = sns.heatmap(Germany_subset.corr(), annot=True, cmap='magma', fmt='.2f', annot_kws={"size": 10})
+    heatmap.set_xticklabels([label[:20] + '...' if len(label) > 20 else label for label in Germany_subset.columns])
+    heatmap.set_yticklabels([label[:20] + '...' if len(label) > 20 else label for label in Germany_subset.columns])
     plt.title('Correlation Heatmap of Indicators for Germany')
     plt.show()
 Germany_HeatMap('job_df_cleaned.csv')
@@ -190,6 +192,8 @@ def Egypt_HeatMap(Job_Data):
 # Plotting the heatmap
     plt.figure(figsize=(12, 8))
     heatmap = sns.heatmap(Egypt_subset.corr(), annot=True, cmap='ocean', fmt='.2f', annot_kws={"size": 10})
+    heatmap.set_xticklabels([label[:20] + '...' if len(label) > 20 else label for label in Egypt_subset.columns])
+    heatmap.set_yticklabels([label[:20] + '...' if len(label) > 20 else label for label in Egypt_subset.columns])
     plt.title('Correlation Heatmap of Indicators for Egypt')
     plt.show()
 Egypt_HeatMap('job_df_cleaned.csv')
